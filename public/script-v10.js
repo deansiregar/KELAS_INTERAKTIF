@@ -1111,19 +1111,32 @@ $("#btnSubmitAnswer").onclick = async () => {
     return toast("Soal ini sudah dijawab!");
   }
 
-  const isCorrect = selectedIndex === q.correctIndex;
-
+  const isCorrectChoice = selectedIndex === q.correctIndex;
+  
   setLoading($("#btnSubmitAnswer"), true);
   
-  // ANALISIS AI DENGAN expectedReason
-  const ai = await analyzeReasonAI({
-    questionText: q.questionText,
-    options: q.options,
-    correctIndex: q.correctIndex,
-    selectedIndex,
-    reason,
-    expectedReason: q.explanation
-  });
+  // ANALISIS AI DENGAN expectedReason DENGAN ERROR HANDLING
+  let ai = null;
+  try {
+    ai = await analyzeReasonAI({
+      questionText: q.questionText,
+      options: q.options,
+      correctIndex: q.correctIndex,
+      selectedIndex,
+      reason,
+      expectedReason: q.explanation
+    });
+    
+    if (!ai || !ai.success) {
+      throw new Error("AI service tidak merespon dengan sukses");
+    }
+  } catch (err) {
+    console.error("AI analysis failed:", err);
+    ai = { 
+      success: false, 
+      message: "AI service unavailable atau gagal merespon" 
+    };
+  }
 
   let label = "TIDAK_PAHAM_KONSEP";
   let analysis = "Perlu memperdalam pemahaman konsep fisika.";
@@ -1134,15 +1147,69 @@ $("#btnSubmitAnswer").onclick = async () => {
   let conf = 0.0;
   let statusMessage = "";
 
-  if (ai && ai.success) {
-    label = ai.classification || label;
-    analysis = ai.analysis || analysis;
-    tag = ai.misconception_tag || "";
-    evidence = ai.evidence || "";
-    steps = Array.isArray(ai.correction_steps) ? ai.correction_steps : [];
-    hint = ai.hint || "";
-    conf = typeof ai.confidence === "number" ? ai.confidence : 0;
-    statusMessage = ai.status_message || "";
+  // JIKA AI GAGAL, GUNAKAN 4 KATEGORI MANUAL (FALLBACK)
+  if (!ai || !ai.success) {
+    // Fallback manual classification sederhana
+    const reasonLower = reason.toLowerCase();
+    const expectedLower = (q.explanation || "").toLowerCase();
+    
+    // Cek similarity sederhana (term matching)
+    const reasonWords = reasonLower.split(/\s+/);
+    const expectedWords = expectedLower.split(/\s+/);
+    const matchingWords = reasonWords.filter(word => 
+      word.length > 3 && expectedWords.includes(word)
+    );
+    const hasSemanticSimilarity = matchingWords.length > 0;
+    
+    // Sistem 4 kategori manual
+    if (isCorrectChoice && hasSemanticSimilarity) {
+      label = "MEMAHAMI_KONSEP";
+      statusMessage = "Excellent! Jawaban dan alasan kamu sudah tepat.";
+      analysis = `Siswa telah memahami konsep "${q.explanation || 'fisika'}" dengan baik. Alasan "${reason}" tepat dan sesuai dengan konsep fisika.`;
+    } else if (isCorrectChoice && !hasSemanticSimilarity) {
+      label = "MENEBAK_PEMAHAMAN_TIDAK_LENGKAP";
+      statusMessage = "Perlu Perbaikan - Jawaban benar tapi alasannya salah.";
+      analysis = `Siswa memilih jawaban benar tetapi alasan "${reason}" tidak tepat. Konsep yang benar: "${q.explanation || 'tidak tersedia'}".`;
+    } else if (!isCorrectChoice && hasSemanticSimilarity) {
+      label = "MISKONSEPSI";
+      statusMessage = "Miskonsepsi Terdeteksi - Jawaban salah tapi alasannya benar.";
+      analysis = `Siswa memiliki pemahaman yang keliru. Meskipun alasan "${reason}" tampak benar, jawaban yang dipilih salah. Konsep yang benar: "${q.explanation || 'tidak tersedia'}".`;
+    } else {
+      label = "TIDAK_PAHAM_KONSEP";
+      statusMessage = "Tidak Paham Konsep - Jawaban dan alasan salah.";
+      analysis = `Siswa belum memahami konsep dasar. Jawaban dan alasan "${reason}" salah. Konsep yang benar: "${q.explanation || 'tidak tersedia'}".`;
+    }
+    
+    tag = label === "MISKONSEPSI" ? "misconception" : 
+          label === "MEMAHAMI_KONSEP" ? "excellent" : 
+          label === "MENEBAK_PEMAHAMAN_TIDAK_LENGKAP" ? "guessing" : "no_understanding";
+    
+    hint = label === "MEMAHAMI_KONSEP" ? "Pertahankan pemahaman konsep fisika yang baik!" :
+           label === "MENEBAK_PEMAHAMAN_TIDAK_LENGKAP" ? "Perbaiki pemahaman konsep meskipun pilihan benar." :
+           label === "MISKONSEPSI" ? "Pelajari kembali konsep dasar fisika yang relevan." :
+           "Fokus pada pemahaman konsep fisika dasar.";
+    
+    steps = label === "TIDAK_PAHAM_KONSEP" ? 
+            ["Pahami konsep dasar fisika yang relevan dengan soal", "Baca materi konsep dasar dari sumber yang terpercaya", "Minta bantuan guru untuk penjelasan lebih detail"] :
+            label === "MISKONSEPSI" ? 
+            [`Identifikasi kesalahan pemahaman: ${q.explanation || 'konsep fisika'}`, "Pelajari kembali konsep yang benar dengan contoh-contoh", "Latihan soal dengan variasi yang berbeda"] :
+            label === "MENEBAK_PEMAHAMAN_TIDAK_LENGKAP" ?
+            ["Perbaiki pemahaman konsep meskipun pilihan benar", `Pelajari: ${q.explanation || 'konsep yang benar'}`, "Jangan hanya menghafal jawaban, pahami alasannya"] :
+            ["Pertahankan pemahaman konsep yang baik", "Terus latihan soal dengan variasi yang berbeda"];
+    
+    conf = 0.8; // Default confidence untuk fallback
+  } else {
+    // GUNAKAN RESPONSE AI JIKA BERHASIL
+    if (ai && ai.success) {
+      label = ai.classification || label;
+      analysis = ai.analysis || analysis;
+      tag = ai.misconception_tag || "";
+      evidence = ai.evidence || "";
+      steps = Array.isArray(ai.correction_steps) ? ai.correction_steps : [];
+      hint = ai.hint || "";
+      conf = typeof ai.confidence === "number" ? ai.confidence : 0;
+      statusMessage = ai.status_message || "";
+    }
   }
 
   // TAMPILAN FEEDBACK - 4 KATEGORI
@@ -1176,6 +1243,13 @@ $("#btnSubmitAnswer").onclick = async () => {
     }
   }
   
+  // Tambahkan warning jika AI gagal (informasi untuk debugging)
+  if (!ai || !ai.success) {
+    html += `<div style="margin-top:6px; padding:8px; background:rgba(245,158,11,0.15); border-radius:8px; border:1px solid rgba(245,158,11,0.3);">
+              <small>⚠️ <em>Sistem AI sedang offline. Analisis menggunakan sistem fallback.</em></small>
+            </div>`;
+  }
+  
   html += `<div style="margin-top:6px"><strong>Analisis:</strong> ${escapeHtml(analysis)}</div>`;
   
   if (evidence) {
@@ -1186,31 +1260,40 @@ $("#btnSubmitAnswer").onclick = async () => {
     html += `<div style="margin-top:6px"><strong>Tips:</strong> ${escapeHtml(hint)}</div>`;
   }
   
+  if (steps && steps.length > 0) {
+    html += `<div style="margin-top:6px"><strong>Langkah perbaikan:</strong><ol style="margin:4px 0; padding-left:20px;">`;
+    steps.forEach(step => {
+      html += `<li>${escapeHtml(step)}</li>`;
+    });
+    html += `</ol></div>`;
+  }
+  
   html += `<div style="margin-top:6px"><strong>Jawaban benar:</strong> ${String.fromCharCode(65 + q.correctIndex)}. ${escapeHtml(q.options[q.correctIndex])}</div>`;
   
   if (conf) {
     html += `<div style="margin-top:6px"><small>Tingkat keyakinan AI: ${(conf * 100).toFixed(0)}%</small></div>`;
   }
   
-const guruExplanation = q.explanation || "";
-if (guruExplanation.trim() !== "") {
-  // ✅ FIX: Process guru explanation for MathJax
-  let guruExplanationHtml = guruExplanation;
+  const guruExplanation = q.explanation || "";
+  if (guruExplanation.trim() !== "") {
+    // ✅ FIX: Process guru explanation for MathJax
+    let guruExplanationHtml = guruExplanation;
+    
+    // Convert $$...$$ to proper math containers
+    guruExplanationHtml = guruExplanationHtml.replace(/\$\$(.*?)\$\$/g, 
+      (match, equation) => {
+        const cleanEquation = equation.replace(/\\\\/g, '\\');
+        return `<span class="math-container">$$${cleanEquation}$$</span>`;
+      }
+    );
+    
+    // Convert line breaks to <br>
+    guruExplanationHtml = guruExplanationHtml.replace(/\n/g, '<br>');
+    
+    html += `<hr style="margin:12px 0; border-color:rgba(148,163,184,.2);">`;
+    html += `<div style="margin-top:6px" class="guru-explanation"><strong>Penjelasan Guru:</strong> ${guruExplanationHtml}</div>`;
+  }
   
-  // Convert $$...$$ to proper math containers
-  guruExplanationHtml = guruExplanationHtml.replace(/\$\$(.*?)\$\$/g, 
-    (match, equation) => {
-      const cleanEquation = equation.replace(/\\\\/g, '\\');
-      return `<span class="math-container">$$${cleanEquation}$$</span>`;
-    }
-  );
-  
-  // Convert line breaks to <br>
-  guruExplanationHtml = guruExplanationHtml.replace(/\n/g, '<br>');
-  
-  html += `<hr style="margin:12px 0; border-color:rgba(148,163,184,.2);">`;
-  html += `<div style="margin-top:6px" class="guru-explanation"><strong>Penjelasan Guru:</strong> ${guruExplanationHtml}</div>`;
-}
   if (q.explanationImageUrl) {
     html += `<div style="margin-top:12px;"><strong>Gambar Penjelasan Guru:</strong><br>
              <img src="${q.explanationImageUrl}" class="q-image" alt="Gambar penjelasan" 
@@ -1223,22 +1306,24 @@ if (guruExplanation.trim() !== "") {
   f.classList.add(badgeClass);
 
   setTimeout(() => {
-  if (window.MathJax) {
-    const guruExplanationElements = f.querySelectorAll('.guru-explanation');
-    MathJax.typesetPromise(guruExplanationElements).then(() => {
-      console.log('MathJax rendered guru explanation');
-    }).catch(err => {
-      console.log('MathJax guru explanation rendering issue:', err);
-    });
-  }
-}, 500);
+    if (window.MathJax) {
+      const guruExplanationElements = f.querySelectorAll('.guru-explanation');
+      MathJax.typesetPromise(guruExplanationElements).then(() => {
+        console.log('MathJax rendered guru explanation');
+      }).catch(err => {
+        console.log('MathJax guru explanation rendering issue:', err);
+      });
+    }
+  }, 500);
+  
   // SIMPAN KE STATE
   state.studentAnswers[q.questionId] = {
     selectedIndex,
     reason,
     submitted: true,
     feedback: html,
-    isCorrect
+    isCorrect: isCorrectChoice,
+    aiFailed: !ai || !ai.success // Flag untuk menandai AI gagal
   };
 
   // KIRIM KE SERVER
@@ -1252,15 +1337,16 @@ if (guruExplanation.trim() !== "") {
     correctIndex: q.correctIndex,
     studentName: state.student.name,
     reason,
-    isCorrect,
+    isCorrect: isCorrectChoice,
     errorType: (label === "MISKONSEPSI" ? "misconception" : (label === "MEMAHAMI_KONSEP" ? null : "concept_error")),
-    score: isCorrect ? 1 : 0,
+    score: isCorrectChoice ? 1 : 0,
     clientTime: new Date().toLocaleString("id-ID"),
     ai_label: label,
     ai_tag: tag,
     ai_analysis: analysis,
     ai_hint: hint,
-    ai_confidence: conf
+    ai_confidence: conf,
+    ai_fallback_used: !ai || !ai.success // Tambahkan flag apakah menggunakan fallback
   };
   
   try { 
