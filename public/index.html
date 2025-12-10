@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kelas Interaktif</title>
+  <link rel="stylesheet" href="style_v7.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='28' fill='%235b5bd6'/%3E%3Ctext x='32' y='40' font-size='28' text-anchor='middle' fill='white' font-family='Arial'%3EKI%3C/text%3E%3C/svg%3E">
+  
+<!-- Ganti MathJax config di head dengan ini -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$']],
+      processEscapes: true,
+      tags: 'ams'
+    },
+    svg: {
+      fontCache: 'global',
+      displayAlign: 'left'
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+      renderActions: {
+        addMenu: [0, '', '']
+      }
+    },
+    startup: {
+      ready: function() {
+        console.log('MathJax is ready');
+        MathJax.startup.defaultReady();
+        // Re-render any existing math on page load
+        if (MathJax.startup.document.math) {
+          MathJax.startup.document.math.recompile();
+        }
+      }
+    }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+<header class="app-header">
+  <h1>Kelas Interaktif</h1>
+  <nav>
+    <button id="navHome" class="link">Beranda</button>
+    <button id="navTeacher" class="link">Guru</button>
+    <button id="navStudent" class="link">Siswa</button>
+  </nav>
+  <button id="refreshAppBtn" class="refresh-btn hidden">🔄 Refresh</button>
+</header>
+
+<main class="container">
+  <!-- Home -->
+  <section id="pageHome">
+    <div class="card">
+      <h2>Selamat datang 👋</h2>
+      <p>Pilih peran kamu:</p>
+      <div class="grid-2">
+        <button class="btn btn-primary" id="goTeacher">Masuk sebagai Guru</button>
+        <button class="btn" id="goStudent">Masuk sebagai Siswa</button>
+      </div>
+      <hr />
+      <p class="muted">Data tersimpan ke Spreadsheet.</p>
+    </div>
+  </section>
+
+  <!-- Guru -->
+  <section id="pageTeacher" class="hidden">
+    <div class="card">
+      <h2>Login Guru</h2>
+      <div class="grid-3">
+        <div>
+          <label>Nama Guru</label>
+          <input id="teacherName" placeholder="Nama pengampu" />
+        </div>
+        <div>
+          <label>Admin Password</label>
+          <input id="adminPassword" type="password" placeholder="masukkan password" />
+        </div>
+        <div class="align-end">
+          <button class="btn btn-primary" id="btnLoginAdmin">Login</button>
+        </div>
+      </div>
+      <div id="adminInfo" class="info hidden">Login admin berhasil.</div>
+      <div id="sheetLinkWrap" class="align-end hidden">
+        <a id="sheetLink" class="btn btn-ghost" href="#" target="_blank" rel="noopener">📄 Buka Spreadsheet</a>
+      </div>
+    </div>
+
+    <div class="card admin-locked">
+      <h2>Buat Ruangan</h2>
+      <div class="grid-2">
+        <div><label>Nama Ruangan</label><input id="roomName" placeholder="Contoh: Ujian Kelas X IPA" /></div>
+        <div><label>Kata Sandi Ruangan</label><input id="roomPassword" type="password" placeholder="Minimal 4 karakter" /></div>
+      </div>
+      <div class="align-end">
+        <button class="btn btn-primary" id="btnCreateRoom" disabled>Buat Ruangan</button>
+      </div>
+    </div>
+
+    <div id="roomInfo" class="info hidden"></div>
+
+    <div class="card admin-locked">
+      <h2>Tambah Soal ke Ruangan</h2>
+      <div class="grid-2">
+        <div><label>Room ID</label><input id="qsRoomId" placeholder="Masukkan Room ID" /></div>
+        <div><label>Password Ruangan</label><input id="qsRoomPassword" type="password" placeholder="Untuk validasi" /></div>
+      </div>
+
+      <label>Pertanyaan</label>
+      <textarea id="qsText" rows="3" placeholder="Tulis teks soal..."></textarea>
+
+      <div class="grid-2">
+        <div><label>Opsi A</label><input id="optA" /></div>
+        <div><label>Opsi B</label><input id="optB" /></div>
+        <div><label>Opsi C</label><input id="optC" /></div>
+        <div><label>Opsi D</label><input id="optD" /></div>
+        <div><label>Opsi E</label><input id="optE" /></div>
+        <div>
+          <label>Kunci Jawaban</label>
+          <select id="qsAnswer">
+            <option value="0">A</option><option value="1">B</option>
+            <option value="2">C</option><option value="3">D</option>
+            <option value="4">E</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Editor Matematika yang Diperbaiki -->
+<label>Penjelasan Jawaban (dari Guru) WAJIB</label>
+
+<div class="equation-editor-container">
+  <!-- Toolbar yang lebih sederhana dan jelas -->
+  <div class="equation-toolbar">
+  <div class="toolbar-group">
+    <span class="toolbar-label">Struktur:</span>
+    <button type="button" class="btn-tool" data-latex="\\frac{1}{2}">½ Pecahan</button>
+    <button type="button" class="btn-tool" data-latex="\\sqrt{25}">√ Akar</button>
+    <button type="button" class="btn-tool" data-latex="x^{2}">x² Pangkat</button>
+    <button type="button" class="btn-tool" data-latex="x_{0}">x₀ Bawah</button>
+  </div>
+  <div class="toolbar-group">
+    <span class="toolbar-label">Simbol:</span>
+    <button type="button" class="btn-tool" data-latex="\\pi">π Pi</button>
+    <button type="button" class="btn-tool" data-latex="\\alpha">α Alpha</button>
+    <button type="button" class="btn-tool" data-latex="\\beta">β Beta</button>
+    <button type="button" class="btn-tool" data-latex="\\theta">θ Theta</button>
+    <button type="button" class="btn-tool" data-latex="\\Delta">Δ Delta</button>
+  </div>
+  <div class="toolbar-group">
+    <span class="toolbar-label">Operasi:</span>
+    <button type="button" class="btn-tool" data-latex="\\times">× Kali</button>
+    <button type="button" class="btn-tool" data-latex="\\cdot">⋅ Titik</button>
+    <button type="button" class="btn-tool" data-latex="\\pm">± Plus/Minus</button>
+    <button type="button" class="btn-tool" data-latex="\\leq">≤ Lebih Kecil/Sama</button>
+    <button type="button" class="btn-tool" data-latex="\\geq">≥ Lebih Besar/Sama</button>
+  </div>
+</div>
+
+  <div class="editor-preview-grid">
+    <div class="editor-section">
+      <label>Ketik penjelasan di sini:</label>
+<textarea id="qsExplanation" rows="4" placeholder="Contoh: Menurut hukum Newton kedua: $$F = m \\times a$$. Dimana F adalah gaya dalam Newton, m adalah massa dalam kg, dan a adalah percepatan dalam m/s².
+
+Cara mengetik equation:
+- Pecahan: $$\\frac{1}{2}$$
+- Akar: $$\\sqrt{25}$$
+- Pangkat: $$x^{2}$$
+- Simbol: $$\\pi$$, $$\\alpha$$, $$\\Delta$$
+
+Hasilnya akan tampil di preview sebelah kanan!"></textarea>
+      <small class="muted">Gunakan $$equation$$ untuk matematika. Klik tombol di atas untuk menyisipkan simbol.</small>
+    </div>
+    
+    <div class="preview-section">
+      <label>Preview:</label>
+      <div id="mathPreview" class="math-preview-content">
+        <em>Preview akan muncul di sini...</em>
+      </div>
+    </div>
+  </div>
+</div>
+
+      <!-- Upload Gambar Penjelasan -->
+      <label>Unggah gambar penjelasan (opsional)</label>
+      <div class="uploader">
+        <input id="qsExplanationImageFile" type="file" accept="image/*" hidden />
+        <button type="button" class="btn file-btn" id="btnPickExplanationImage">📎 Pilih Gambar Penjelasan</button>
+        <button type="button" class="btn btn-ghost" id="btnClearExplanationImage">✖ Hapus Gambar</button>
+        <span class="file-name" id="explanationFileName">Belum ada file</span>
+      </div>
+      <div class="thumb hidden" id="explanationThumbWrap">
+        <img id="explanationThumb" alt="Pratinjau gambar penjelasan" />
+      </div>
+
+      <!-- Upload Gambar Soal -->
+      <label>Unggah file gambar soal (opsional)</label>
+      <div class="uploader">
+        <input id="qsImageFile" type="file" accept="image/*" hidden />
+        <button type="button" class="btn file-btn" id="btnPickImage">📎 Pilih Gambar</button>
+        <button type="button" class="btn btn-ghost" id="btnClearImage">✖ Hapus Gambar</button>
+        <span class="file-name" id="fileName">Belum ada file</span>
+      </div>
+      <div class="thumb hidden" id="thumbWrap">
+        <img id="thumb" alt="Pratinjau" />
+      </div>
+      <small class="muted">Gambar disimpan sebagai Data URL (ideal ≤ ~300 KB).</small>
+
+      <div class="align-end reset-row">
+        <button class="btn btn-danger" id="btnResetQuestions">Reset Soal</button>
+        <label class="switch">
+          <input type="checkbox" id="resetAlsoAnswers" />
+          <span class="slider"></span>
+          <span class="switch-label">Hapus juga jawaban & rekap</span>
+        </label>
+        <button class="btn btn-primary" id="btnAddQuestion" disabled>Tambah Soal</button>
+        <button class="btn" id="btnPreviewQuestions">Preview Soal</button>
+      </div>
+
+      <div id="questionsPreview" class="preview"></div>
+    </div>
+  </section>
+
+  <!-- Siswa -->
+  <section id="pageStudent" class="hidden">
+    <div id="studentLogin" class="card">
+      <h2>Masuk ke Ruangan</h2>
+      <div class="grid-3">
+        <div><label>Nama Siswa</label><input id="studentName" placeholder="Nama kamu" /></div>
+        <div><label>Room ID</label><input id="studentRoomId" placeholder="ID ruangan" /></div>
+        <div><label>Password</label><input id="studentPassword" type="password" placeholder="Kata sandi ruangan" /></div>
+      </div>
+      <div class="align-end"><button class="btn btn-primary" id="btnEnterRoom">Masuk</button></div>
+    </div>
+
+    <div id="studentTest" class="card hidden">
+      <div class="test-header">
+        <div><strong>Nama:</strong> <span id="lblStudentName">-</span> • <strong>Room:</strong> <span id="lblRoomId">-</span></div>
+        <div class="timer" id="timer">Waktu: 00:00</div>
+      </div>
+
+      <!-- Lockdown Warning -->
+      <div id="lockdownWarning" class="lockdown-warning hidden">
+        ⚠️ <strong>LOCKDOWN MODE</strong> - Jangan keluar dari halaman ini selama ujian!
+        <span id="violationCount" style="float: right;">Pelanggaran: 0</span>
+      </div>
+
+      <div id="questionWrap" class="question-wrap">
+        <div class="question-number">Soal <span id="currentNo">1</span>/<span id="totalNo">1</span></div>
+        <div id="questionText" class="question-text"></div>
+        <img id="questionImage" class="q-image hidden" alt="Gambar soal" />
+        <div id="options" class="options"></div>
+
+        <!-- EQUATION EDITOR UNTUK SISWA -->
+        <label>Alasan Jawaban</label>
+        
+        <div class="equation-editor-container">
+          <!-- Toolbar untuk Siswa -->
+          <div class="equation-toolbar">
+            <div class="toolbar-group">
+              <span class="toolbar-label">Struktur:</span>
+              <button type="button" class="btn-tool-student" data-latex="\\frac{1}{2}">½ Pecahan</button>
+              <button type="button" class="btn-tool-student" data-latex="\\sqrt{25}">√ Akar</button>
+              <button type="button" class="btn-tool-student" data-latex="x^{2}">x² Pangkat</button>
+              <button type="button" class="btn-tool-student" data-latex="x_{0}">x₀ Bawah</button>
+            </div>
+            <div class="toolbar-group">
+              <span class="toolbar-label">Simbol:</span>
+              <button type="button" class="btn-tool-student" data-latex="\\pi">π Pi</button>
+              <button type="button" class="btn-tool-student" data-latex="\\alpha">α Alpha</button>
+              <button type="button" class="btn-tool-student" data-latex="\\beta">β Beta</button>
+              <button type="button" class="btn-tool-student" data-latex="\\theta">θ Theta</button>
+              <button type="button" class="btn-tool-student" data-latex="\\Delta">Δ Delta</button>
+            </div>
+            <div class="toolbar-group">
+              <span class="toolbar-label">Operasi:</span>
+              <button type="button" class="btn-tool-student" data-latex="\\times">× Kali</button>
+              <button type="button" class="btn-tool-student" data-latex="\\cdot">⋅ Titik</button>
+              <button type="button" class="btn-tool-student" data-latex="\\pm">± Plus/Minus</button>
+              <button type="button" class="btn-tool-student" data-latex="\\leq">≤ Lebih Kecil/Sama</button>
+              <button type="button" class="btn-tool-student" data-latex="\\geq">≥ Lebih Besar/Sama</button>
+            </div>
+          </div>
+
+          <div class="editor-preview-grid">
+            <div class="editor-section">
+              <label>Ketik alasan di sini:</label>
+              <textarea id="reason" rows="4" placeholder="Tulis alasan kamu memilih jawaban...
+
+Contoh: Menurut hukum Newton kedua: $$F = m \\times a$$
+
+Cara mengetik equation:
+- Pecahan: $$\\frac{1}{2}$$
+- Akar: $$\\sqrt{25}$$
+- Pangkat: $$x^{2}$$
+- Simbol: $$\\pi$$, $$\\alpha$$, $$\\Delta$$
+
+Hasilnya akan tampil di preview sebelah kanan!"></textarea>
+              <small class="muted">Gunakan $$equation$$ untuk matematika. Klik tombol di atas untuk menyisipkan simbol.</small>
+            </div>
+            
+            <div class="preview-section">
+              <label>Preview:</label>
+              <div id="studentMathPreview" class="math-preview-content">
+                <em>Preview akan muncul di sini...</em>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="feedback" class="feedback hidden"></div>
+
+        <div class="nav">
+          <button class="btn" id="btnPrev">Sebelumnya</button>
+          <button class="btn btn-primary" id="btnSubmitAnswer">Kirim Jawaban</button>
+          <button class="btn" id="btnNext">Berikutnya</button>
+        </div>
+      </div>
+
+      <div class="align-end">
+        <button class="btn btn-danger" id="btnFinish">Selesai Ujian</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="app-footer">
+  <small>© 2025 Kelas Interaktif</small>
+</footer>
+
+<script src="script-v10.js"></script>
+</body>
+</html>
