@@ -1,0 +1,198 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="2cc2d294-239e-d60f-22bb-7596b5cce9ef">
+    <mxGraphModel dx="1426" dy="881" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        
+        <!-- TITLE -->
+        <mxCell id="title" value="&lt;b&gt;SISTEM ANALISIS JAWABAN SISWA&lt;/b&gt;&lt;br&gt;&lt;div style='font-size:16px;color:#666'&gt;Architecture &amp; AI Decision Flow&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;" vertex="1" parent="1">
+          <mxGeometry x="250" y="20" width="300" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- START -->
+        <mxCell id="start" value="🚀&lt;br&gt;&lt;b&gt;MULAI&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontSize=16;fontColor=#ffffff;fillColor=#7e57c2;strokeColor=#5e35b1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="90" width="80" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- STEP 1 -->
+        <mxCell id="step1" value="📥&lt;br&gt;&lt;b&gt;Input Jawaban&lt;/b&gt;&lt;br&gt;&lt;div style='font-size:12px'&gt;Siswa memilih opsi dan&lt;br&gt;menulis alasan&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#e3f2fd;strokeColor=#1976d2;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="335" y="190" width="130" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- STEP 2 - AI PROCESSING -->
+        <mxCell id="step2" value="🤖&lt;br&gt;&lt;b&gt;Proses AI&lt;/b&gt;&lt;br&gt;&lt;div style='font-size:12px'&gt;Analisis semantic&lt;br&gt;dan pattern matching&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#fff3e0;strokeColor=#ffa000;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="335" y="290" width="130" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- DECISION CENTER -->
+        <mxCell id="decision_center" value="🎯&lt;br&gt;&lt;b&gt;Deteksi Pola&lt;/b&gt;&lt;br&gt;&lt;div style='font-size:12px'&gt;Decision tree logic&lt;br&gt;berdasarkan kombinasi&lt;br&gt;jawaban &amp; alasan&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;fontSize=14;fillColor=#fce4ec;strokeColor=#ad1457;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="335" y="390" width="130" height="100" as="geometry"/>
+        </mxCell>
+
+        <!-- KATEGORI 1 - TOP -->
+        <mxCell id="kategori1" value="✅&lt;br&gt;&lt;b&gt;Memahami Konsep&lt;/b&gt;&lt;br&gt;&lt;div style='font-size:11px'&gt;Jawaban dan Alasan&lt;br&gt;Keduanya Benar&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#e8f5e8;strokeColor=#4caf50;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="500" y="320" width="140" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- KATEGORI 2 - RIGHT -->
+        <mxCell id="kategori2" value="🎲&lt;br&gt;&lt;b&gt;Menebak&lt;/b&gt;&lt;br&gt;&lt;div style='font-size:11px'&gt;Jawaban Benar&lt;br&gt;Alasan Salah&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#fff3e0;strokeColor=#ff9800;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="500" y="420" width="140" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- KATEGORI 3 - LEFT -->
+        <mxCell id="kategori3" value="🔄&lt;br&gt;&lt;b&gt;Miskonsepsi&lt;/b&gt;&lt;br&gt;&lt;div style='font-size:11px'&gt;Jawaban Salah&lt;br&gt;Alasan Benar&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#fff3e0;strokeColor=#ff9800;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="160" y="320" width="140" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- KATEGORI 4 - BOTTOM -->
+        <mxCell id="kategori4" value="❌&lt;br&gt;&lt;b&gt;Tidak Paham&lt;/b&gt;&lt;br&gt;&lt;div style='font-size:11px'&gt;Jawaban dan Alasan&lt;br&gt;Keduanya Salah&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#ffebee;strokeColor=#f44336;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="160" y="420" width="140" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- FEEDBACK -->
+        <mxCell id="feedback" value="💬&lt;br&gt;&lt;b&gt;Feedback Instan&lt;/b&gt;&lt;br&gt;&lt;div style='font-size:12px'&gt;Pesan personal dan&lt;br&gt;penjelasan konsep&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#f3e5f5;strokeColor=#9c27b0;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="335" y="520" width="130" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- LAPORAN -->
+        <mxCell id="laporan" value="📊&lt;br&gt;&lt;b&gt;Laporan Otomatis&lt;/b&gt;&lt;br&gt;&lt;div style='font-size:12px'&gt;Data tersimpan di&lt;br&gt;Google Sheets&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#e8eaf6;strokeColor=#3f51b5;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="335" y="620" width="130" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- END -->
+        <mxCell id="end" value="🏁&lt;br&gt;&lt;b&gt;SELESAI&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontSize=16;fontColor=#ffffff;fillColor=#7e57c2;strokeColor=#5e35b1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="720" width="80" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- TECH SPECS BOX - Connected to AI Processing -->
+        <mxCell id="tech_specs" value="&lt;b&gt;TECH SPECS&lt;/b&gt;&lt;br&gt;&lt;div style='font-size:11px;text-align:left'&gt;• AI Engine: Groq API&lt;br&gt;• Model: Llama 3.1 8B&lt;br&gt;• Response: &lt; 30 detik&lt;br&gt;• Confidence: 95%&lt;br&gt;• Storage: Google Sheets&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="500" y="190" width="140" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- AI DECISION TREE - Connected to Decision Center -->
+        <mxCell id="decision_tree" value="&lt;b&gt;AI DECISION TREE&lt;/b&gt;&lt;br&gt;&lt;div style='font-size:10px;text-align:left'&gt;if (correct &amp;&amp; relevant)&lt;br&gt;&nbsp;&nbsp;→ ✅ Memahami Konsep&lt;br&gt;if (correct &amp;&amp; !relevant)&lt;br&gt;&nbsp;&nbsp;→ 🎲 Menebak&lt;br&gt;if (!correct &amp;&amp; relevant)&lt;br&gt;&nbsp;&nbsp;→ 🔄 Miskonsepsi&lt;br&gt;else → ❌ Tidak Paham&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#e3f2fd;strokeColor=#1976d2;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="160" y="190" width="140" height="100" as="geometry"/>
+        </mxCell>
+
+        <!-- CONNECTIONS - MAIN FLOW -->
+        <mxCell id="conn1" value="" style="endArrow=classic;html=1;rounded=0;fontSize=12;strokeWidth=2;strokeColor=#1976d2;" edge="1" parent="1" source="start" target="step1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="190" as="sourcePoint"/>
+            <mxPoint x="400" y="170" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="conn2" value="" style="endArrow=classic;html=1;rounded=0;fontSize=12;strokeWidth=2;strokeColor=#ffa000;" edge="1" parent="1" source="step1" target="step2">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="290" as="sourcePoint"/>
+            <mxPoint x="400" y="270" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="conn3" value="" style="endArrow=classic;html=1;rounded=0;fontSize=12;strokeWidth=2;strokeColor=#ad1457;" edge="1" parent="1" source="step2" target="decision_center">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="390" as="sourcePoint"/>
+            <mxPoint x="400" y="370" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- CONNECTIONS - CATEGORIES FROM CENTER -->
+        <mxCell id="conn4" value="" style="endArrow=classic;html=1;rounded=0;fontSize=12;strokeWidth=2;strokeColor=#4caf50;" edge="1" parent="1" source="decision_center" target="kategori1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="465" y="390" as="sourcePoint"/>
+            <mxPoint x="500" y="360" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="conn5" value="" style="endArrow=classic;html=1;rounded=0;fontSize=12;strokeWidth=2;strokeColor=#ff9800;" edge="1" parent="1" source="decision_center" target="kategori2">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="465" y="440" as="sourcePoint"/>
+            <mxPoint x="500" y="460" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="conn6" value="" style="endArrow=classic;html=1;rounded=0;fontSize=12;strokeWidth=2;strokeColor=#ff9800;" edge="1" parent="1" source="decision_center" target="kategori3">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="335" y="390" as="sourcePoint"/>
+            <mxPoint x="300" y="360" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="conn7" value="" style="endArrow=classic;html=1;rounded=0;fontSize=12;strokeWidth=2;strokeColor=#f44336;" edge="1" parent="1" source="decision_center" target="kategori4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="335" y="440" as="sourcePoint"/>
+            <mxPoint x="300" y="460" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- CONNECTIONS - CATEGORIES TO FEEDBACK -->
+        <mxCell id="conn8" value="" style="endArrow=classic;html=1;rounded=0;fontSize=12;strokeWidth=2;strokeColor=#4caf50;" edge="1" parent="1" source="kategori1" target="feedback">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="570" y="360" as="sourcePoint"/>
+            <mxPoint x="465" y="520" as="targetPoint"/>
+            <Array as="points">
+              <mxPoint x="570" y="520"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="conn9" value="" style="endArrow=classic;html=1;rounded=0;fontSize=12;strokeWidth=2;strokeColor=#ff9800;" edge="1" parent="1" source="kategori2" target="feedback">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="570" y="460" as="sourcePoint"/>
+            <mxPoint x="465" y="560" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="conn10" value="" style="endArrow=classic;html=1;rounded=0;fontSize=12;strokeWidth=2;strokeColor=#ff9800;" edge="1" parent="1" source="kategori3" target="feedback">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="160" y="360" as="sourcePoint"/>
+            <mxPoint x="335" y="520" as="targetPoint"/>
+            <Array as="points">
+              <mxPoint x="160" y="520"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="conn11" value="" style="endArrow=classic;html=1;rounded=0;fontSize=12;strokeWidth=2;strokeColor=#f44336;" edge="1" parent="1" source="kategori4" target="feedback">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="160" y="460" as="sourcePoint"/>
+            <mxPoint x="335" y="560" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- CONNECTIONS - MAIN FLOW CONTINUED -->
+        <mxCell id="conn12" value="" style="endArrow=classic;html=1;rounded=0;fontSize=12;strokeWidth=2;strokeColor=#9c27b0;" edge="1" parent="1" source="feedback" target="laporan">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="620" as="sourcePoint"/>
+            <mxPoint x="400" y="600" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="conn13" value="" style="endArrow=classic;html=1;rounded=0;fontSize=12;strokeWidth=2;strokeColor=#3f51b5;" edge="1" parent="1" source="laporan" target="end">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="720" as="sourcePoint"/>
+            <mxPoint x="400" y="700" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- CONNECTIONS - TECH SPECS TO AI PROCESSING -->
+        <mxCell id="conn14" value="" style="endArrow=classic;html=1;rounded=0;fontSize=12;strokeWidth=1;strokeColor=#666666;dashed=1;" edge="1" parent="1" source="tech_specs" target="step2">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="570" y="235" as="sourcePoint"/>
+            <mxPoint x="465" y="290" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- CONNECTIONS - DECISION TREE TO DECISION CENTER -->
+        <mxCell id="conn15" value="" style="endArrow=classic;html=1;rounded=0;fontSize=12;strokeWidth=1;strokeColor=#1976d2;dashed=1;" edge="1" parent="1" source="decision_tree" target="decision_center">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="230" y="235" as="sourcePoint"/>
+            <mxPoint x="335" y="390" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

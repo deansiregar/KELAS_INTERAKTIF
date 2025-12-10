@@ -1,7 +1,7 @@
 /*********************************************************
  * KONFIGURASI
  *********************************************************/
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwYhZkDDjZ8eGXIzuG_K7BYHsRAU7cM-tsGVGyoaHxuWOfZxPard7y9cV_YFwJcSln49w/exec";
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxzx-R6DOUlfrF86yyjf7UbJArEPtT_qBO401Kpx_GXDI5sXgo7jhLBPdTJ9R4OshkRAA/exec";
 const SPREADSHEET_URL = "https://docs.google.com/spreadsheets/d/1X2H4gyoWar9BAIit_dV-NeQYEYmKNVITZDleEo-uPn8/edit?usp=sharing";
 const MAX_DATAURL_CHARS = 45000;
 const PING_INTERVAL = 15 * 60 * 1000; // 15 menit
